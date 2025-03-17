@@ -9,4 +9,13 @@ Pada milestone pertama, saya mengembangkan web server dengan menambahkan fungsi 
 
 ## Commit 2 Reflection
 *Milestone 2: Returning HTML*
-Pada milestone ini, saya meningkatkan fungsionalitas web server dengan memungkinkan server mengirimkan file HTML sebagai respons terhadap permintaan HTTP. Sebelumnya, server hanya mencetak request yang diterima ke terminal, tetapi sekarang perlu mengimplementasikan fungsi `handle_connection()` yang membaca file HTML (`hello.html`), lalu mengirimkannya ke klien dengan format HTTP yang sesuai. Dengan menggunakan `fs::read_to_string()` yang dapat membaca konten file, lalu menyusunnya menjadi respons lengkap dengan status `HTTP/1.1 200 OK` dan header `Content-Length`. Hasilnya, saat mengakses **http://127.0.0.1:7878** melalui browser akan melihat halaman HTML yang telah kita buat. Perubahan ini memberikan dasar bagi server untuk menangani berbagai jenis permintaan dan meresponsnya dengan konten yang lebih kompleks di tahap berikutnya.
+Pada milestone kedua, saya meningkatkan fungsionalitas web server dengan memungkinkan server mengirimkan file HTML sebagai respons terhadap permintaan HTTP. Sebelumnya, server hanya mencetak request yang diterima ke terminal, tetapi sekarang perlu mengimplementasikan fungsi `handle_connection()` yang membaca file HTML (`hello.html`), lalu mengirimkannya ke klien dengan format HTTP yang sesuai. Dengan menggunakan `fs::read_to_string()` yang dapat membaca konten file, lalu menyusunnya menjadi respons lengkap dengan status `HTTP/1.1 200 OK` dan header `Content-Length`. Hasilnya, saat mengakses **http://127.0.0.1:7878** melalui browser akan melihat halaman HTML yang telah kita buat. Perubahan ini memberikan dasar bagi server untuk menangani berbagai jenis permintaan dan meresponsnya dengan konten yang lebih kompleks di tahap berikutnya.
+
+![Commit 2 Screen capture](commit2.png)
+
+## Commit 3 Reflection
+*Milestone 3: Validating request and selectively responding* 
+Pada milestone ketiga, kita meningkatkan server dengan menambahkan **validasi request** dan **penanganan respons yang berbeda** berdasarkan path yang diminta. Dengan menggunakan `BufReader`, kita membaca baris pertama request (`request_line`) untuk mengetahui **path yang diminta oleh klien**. Jika permintaan adalah `"GET / HTTP/1.1"`, server akan merespons dengan file **hello.html** dan status `"HTTP/1.1 200 OK"`. Jika path yang diminta berbeda, server akan mengembalikan **404 Page.html** dengan status `"HTTP/1.1 404 NOT FOUND"`.
+Dengan pendekatan ini, server kini dapat membedakan antara request yang valid dan yang tidak ditemukan, seperti server web nyata yang menampilkan **halaman utama** atau **halaman error 404** jika pengguna mencoba mengakses path yang tidak tersedia. Hal ini menjadi dasar bagi penanganan request yang lebih kompleks di milestone berikutnya.
+
+![Commit 3 Screen Capture](commit3.png)
