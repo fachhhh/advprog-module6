@@ -52,7 +52,14 @@ fn handle_connection(mut stream: TcpStream) {
         _ => ("HTTP/1.1 404 NOT FOUND", "404 Page.html"),
     };
 
-    let contents = fs::read_to_string(filename).unwrap();
+    let contents = match fs::read_to_string(filename) {
+        Ok(contents) => contents,
+        Err(_) => {
+            let error_message = "HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\nInternal Server Error";
+            stream.write_all(error_message.as_bytes()).unwrap();
+            return;
+        }
+    };    
 
     let length = contents.len();
 

@@ -34,16 +34,38 @@ impl ThreadPool {
 #[allow(dead_code)]
 struct Worker {
     id: usize,
-    thread: thread::JoinHandle<()>,
+    thread: Option<thread::JoinHandle<()>>,
 }
 
 impl Worker {
     fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
-        let thread: thread::JoinHandle<()> = thread::spawn(move || loop {
-            let job: Job = receiver.lock().unwrap().recv().unwrap();
+        let thread = thread::spawn(move || loop {
+            let job = match receiver.lock().unwrap().recv() {
+                Ok(job) => job,
+                Err(_) => {
+                    println!("Worker {id} disconnected; shutting down.");
+                    break;
+                }
+            };
+
             println!("Worker {id} got a job; executing.");
             job();
         });
-        Worker{id, thread}
+
+        Worker { id, thread: Some(thread) }
+    }
+}
+
+impl Drop for ThreadPool {
+    fn drop(&mut self) {
+        println!("Shutting down all workers...");
+
+        for worker in &mut self.workers {
+            println!("Shutting down worker {}", worker.id);
+
+            if let Some(thread) = worker.thread.take() {
+                thread.join().unwrap();
+            }
+        }
     }
 }
